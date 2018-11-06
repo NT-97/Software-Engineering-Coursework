@@ -1,0 +1,22 @@
+﻿<Page x:Class="MessageBank.MainMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MessageBank"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="MainMenu">
+
+    <Grid>
+              
+        <Button x:Name="btn_Exit" Content="Exit" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="btn_Exit_Click" IsTabStop="False"/>
+        <Label Content="Menu" HorizontalAlignment="Left" Margin="233,251,0,0" VerticalAlignment="Top" Width="180" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
+        <Separator HorizontalAlignment="Left" Height="30" Margin="233,265,0,0" VerticalAlignment="Top" Width="65"/>
+
+
+        <Button x:Name="btn_inputText" Content="  Input" HorizontalAlignment="Left" Margin="233,292,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="btn_inputText_click" HorizontalContentAlignment="Left"/>
+        
+
+    </Grid>
+</Page>
