@@ -17,51 +17,30 @@ using System.Windows.Shapes;
 namespace MessageBank
 {
     /// <summary>
-    /// Interaction logic for Input.xaml
+    /// Interaction logic for ViewMessagesPage.xaml
     /// </summary>
-    public partial class Input : Page
+    public partial class ViewMessages : Page
     {
         Validations validation = new Validations();
         Json json = new Json();
 
 
 
-        public Input()
+        public ViewMessages()
         {
             InitializeComponent();
-            validation.LoadStoredList();
+            DisplayNewMessage();
         }
 
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        #region Click Events
+
+        private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-
-
-
-            // Converts the whole list of messages into JSON and stores it
-            json.Serialize(validation.messagesList);
-
+            DisplayNewMessage();
         }
 
-        private void convertButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Validates the message header
-            if (validation.InputMessageCheck(messageHeaderTxt.Text.Trim()).Equals(false))
-            {
-                MessageBox.Show("The Header has been input incorrectly, please try again.");
-                messageHeaderTxt.Focus();
-                return;
-            }
-
-            // Validates the message body
-            if (validation.InputBodyCheck(messageBodyTxt.Text.Trim()).Equals(false))
-            {
-                MessageBox.Show("The Body has been input incorrectly, please try again");
-                messageBodyTxt.Focus();
-                return;
-            }
-        }
-
+        #endregion
 
 
         #region Navigation Buttons
@@ -84,7 +63,20 @@ namespace MessageBank
             validation.ExitAppValidation();
         }
 
+        #endregion
 
-        #endregion        
+
+        #region Private Methods
+
+        private void DisplayNewMessage()
+        {
+            //MessageClass message = json.Deserialize();            
+
+            //messageHeaderTxt.Text = message.Header;
+            //messageBodyTxt.Text = message.MessageText;    
+        }
+
+        #endregion
+
     }
 }

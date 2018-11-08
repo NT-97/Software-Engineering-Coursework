@@ -21,48 +21,68 @@ namespace MessageBank
     /// </summary>
     public partial class MainMenu : Page
     {
+        #region Object
+
         Validations menuValidation = new Validations();
 
+        #endregion
 
-
-
+        #region Constructor
 
         public MainMenu()
         {
             InitializeComponent();
         }
 
-
-
-
-
+        #endregion
 
         #region Click Events
 
-        private void btn_inputText_click(object sender, RoutedEventArgs e)
+        private void manuallyInputButton_Click(object sender, RoutedEventArgs e)
         {
             // Instantiate an object of the InputManually page
-            Input inputPage = new Input();
+            Input input = new Input();
 
-            // Navigates to the input page
-            NavigationService.Navigate(inputPage);
+            // Navigates to the InputManually page
+            NavigationService.Navigate(input);
+        }
+
+        private void autoInputButton_Click(object sender, RoutedEventArgs e)
+        {
+            // later
+        }
+
+        private void viewMessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Instantiate an object of the ViewMessages Page           
+            ViewMessages viewMessages = new ViewMessages();
+
+            // Navigates to the InputManually page
+            NavigationService.Navigate(viewMessages);
+
+        }
+
+        private void exportJson_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
 
         #endregion
 
+        #region Exit Button
 
-
-
-
-        #region Exit
-
-        private void btn_Exit_Click(object sender, RoutedEventArgs e)
+        // Method which handles the 'Exit Application' button being clicked
+        private void exitButton_Click(object sender, RoutedEventArgs e)
         {
-            // Calls the method from validation to exit
+            // Calls the method ExitApplicationValidation() from the Validation class.
             menuValidation.ExitAppValidation();
         }
-    }
 
-    #endregion
+
+
+
+        #endregion
+
+    }
 }

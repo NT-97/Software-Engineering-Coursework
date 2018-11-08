@@ -6,17 +6,26 @@
       xmlns:local="clr-namespace:MessageBank"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
-      Title="MainMenu">
+      Title="MenuPage">
 
     <Grid>
-              
-        <Button x:Name="btn_Exit" Content="Exit" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="btn_Exit_Click" IsTabStop="False"/>
+        <!--The logo displayed-->
+
+        <!--Navigation - button (Setup - Arial Font, Size 12, Cannot be tab selected)-->
+        <Button x:Name="exitButton" Content="Exit Application" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="exitButton_Click" IsTabStop="False"/>
+
+        <!-- Menu Label-->
         <Label Content="Menu" HorizontalAlignment="Left" Margin="233,251,0,0" VerticalAlignment="Top" Width="180" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
+
+        <!-- Underline for Menu Label -->
         <Separator HorizontalAlignment="Left" Height="30" Margin="233,265,0,0" VerticalAlignment="Top" Width="65"/>
 
 
-        <Button x:Name="btn_inputText" Content="  Input" HorizontalAlignment="Left" Margin="233,292,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="btn_inputText_click" HorizontalContentAlignment="Left"/>
-        
+        <Button x:Name="manuallyInputButton" Content="Input Messages [manually]" HorizontalAlignment="Left" Margin="233,292,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="manuallyInputButton_Click" HorizontalContentAlignment="Left"/>
+        <Button x:Name="autoInputButton" Content="Input Messages [from file]" HorizontalAlignment="Left" Margin="233,327,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="autoInputButton_Click"/>
+        <Button x:Name="viewMessagesButton" Content="View Messages" HorizontalAlignment="Left" Margin="233,362,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="viewMessagesButton_Click" />
+        <Button x:Name="exportJson" Content="Export JSON file" HorizontalAlignment="Left" Margin="233,397,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="exportJson_Click" />
+
 
     </Grid>
 </Page>
