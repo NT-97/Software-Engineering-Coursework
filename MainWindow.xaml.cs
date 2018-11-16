@@ -25,6 +25,23 @@ namespace MessageBank
             InitializeComponent();
 
             MainFrame.Content = new MessageBank.MainMenu();
+
+            SetWindowSize();
+        }
+
+        private void SetWindowSize()
+        {
+            // Manually alter window height and width
+            this.SizeToContent = SizeToContent.Manual;
+
+            // Automatically resize width relative to content
+            this.SizeToContent = SizeToContent.Width;
+
+            // Automatically resize height relative to content
+            this.SizeToContent = SizeToContent.Height;
+
+            // Automatically resize height and width relative to content
+            this.SizeToContent = SizeToContent.WidthAndHeight;
         }
     }
 }

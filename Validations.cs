@@ -11,10 +11,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MessageBank
 {
-    public class Validations 
+    public class Validations
     {
-        Json jsonClass = new Json();
-
         bool smsMessage = false;
         bool emailMessage = false;
         bool tweetMessage = false;
@@ -25,6 +23,7 @@ namespace MessageBank
         string text = string.Empty;
         string subject = string.Empty;
         string name = string.Empty;
+
 
         public List<Messages> listOfMessages = new List<Messages>();
 
@@ -39,7 +38,7 @@ namespace MessageBank
 
 
 
-        
+        Json jsonClass = new Json();
 
 
         // Default Constructor
@@ -100,47 +99,52 @@ namespace MessageBank
 
         public bool MessageBodyInputValidation(string inputText)
         {
-            bool smsCheck = true;
-
-            string emailPattern = @"[A-Za-z0-9_\-\+]+@[A-Za-z0-9\-]+\.([A-Za-z]{2,3})(?:\.[a-z]{2})?";
-
-
             EmailAddressAttribute emailAddressCheck = new EmailAddressAttribute();
             PhoneAttribute phoneNumberCheck = new PhoneAttribute();
-
 
             // SMS
             if (smsMessage.Equals(true))
             {
-                //string smsPattern = @"^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$";
-
-                //Regex myRegex = new Regex(smsPattern, RegexOptions.None);
-
-                //sender = myRegex.Replace(inputText, string.Empty);
-
-                //MessageBox.Show(sender);
-
-
+                bool smsCheck = true;
+                smsMessage = false;
 
                 while (smsCheck)
                 {
-                    for (int i = 15; i > 7; i--)
+                    if (inputText.Length > 15)
                     {
-                        sender = inputText.Trim().Substring(0, i);
-
-                        if (phoneNumberCheck.IsValid(sender))
+                        for (int i = 15; i > 7; i--)
                         {
+                            sender = inputText.Trim().Substring(0, i);
 
-                            text = inputText.Trim().Substring(i);
+                            if (phoneNumberCheck.IsValid(sender))
+                            {
+
+                                text = inputText.Trim().Substring(i);
 
 
-                            smsCheck = false;
-                            break;
+                                smsCheck = false;
+                                break;
+                            }
                         }
-
                     }
+                    else if (inputText.Length > 7 && inputText.Length < 16)
+                    {
+                        for (int i = inputText.Length; i > 7; i--)
+                        {
+                            sender = inputText.Trim().Substring(0, i);
 
-                    if (smsCheck.Equals(true))
+                            if (phoneNumberCheck.IsValid(sender))
+                            {
+
+                                text = inputText.Trim().Substring(i);
+
+
+                                smsCheck = false;
+                                break;
+                            }
+                        }
+                    }
+                    else
                     {
                         MessageBox.Show("The phone number entered, is not a valid phone number.");
                         return false;
@@ -149,123 +153,138 @@ namespace MessageBank
                 }
 
                 SetPublicVariable();
-
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////// MESSAGE PROCESSING GOES HERE //////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
                 MessageBox.Show("SMS Converted");
-
-
                 return true;
             }
 
             // EMAIL
             if (emailMessage.Equals(true))
             {
-                Regex myRegex = new Regex(emailPattern, RegexOptions.None);
+                emailMessage = false;
 
-                Match myMatch = myRegex.Match(inputText);
+                string[] splitProText = inputText.Trim().Split(' ');
 
-                if (myMatch.Success)
+                string[] nameArray = { };
+                string[] subjectAndTextArray = { };
+
+
+                string subjectAndText = string.Empty;
+                bool emailAddressFound = false;
+
+
+
+                for (int i = 0; i < splitProText.Length; i++)
                 {
-                    sender = myMatch.Value;
-
-                    // Checks if the email is a valid email address
-                    if (!emailAddressCheck.IsValid(sender))
+                    if (splitProText[i].Contains("@"))
                     {
-                        MessageBox.Show("You have entered an incorrect email address.");
-                        return false;
+                        // Checks if the email is a valid email address
+                        if (emailAddressCheck.IsValid(splitProText[i]))
+                        {
+                            emailAddressFound = true;
+                            sender = splitProText[i];
+                            splitProText[i] = "";
+
+                            nameArray = splitProText.Take(i).ToArray();
+                            subjectAndTextArray = splitProText.Skip(i).ToArray();
+
+                            break;
+                        }
                     }
                 }
-                else
+
+                if (emailAddressFound.Equals(false))
                 {
                     MessageBox.Show("You have entered an incorrect email address.");
                     return false;
                 }
 
-                // Removes the email address from the string and replaces it with a '|'
-                string newInputText = myRegex.Replace(inputText, "|");
 
-                // Splits the string in 2 based on the delimiter '|'
-                string[] splitText = newInputText.Split('|');
+
+                // Concatenate all the elements into a StringBuilder.
+                StringBuilder nameBuilder = new StringBuilder();
+                foreach (string value in nameArray)
+                {
+                    nameBuilder.Append(value);
+                    nameBuilder.Append(' ');
+                }
+
+                name = nameBuilder.ToString().Trim();
+
+
+                // Concatenate all the elements into a StringBuilder.
+                StringBuilder subjectAndTextBuilder = new StringBuilder();
+                foreach (string value in subjectAndTextArray)
+                {
+                    subjectAndTextBuilder.Append(value);
+                    subjectAndTextBuilder.Append(' ');
+                }
+
+                subjectAndText = subjectAndTextBuilder.ToString().Trim();
+
+
+
+
+
+
+
+
+
+                // Creates substrings from newInputText
+                subject = subjectAndText.Trim().Substring(0, 20);
+                text = subjectAndText.Trim().Substring(20);
+
+
 
                 // Checks the email doesn't exceed the maximum length
-                if (splitText[1].Length > 1048)
+                if (text.Length > 1028)
                 {
                     MessageBox.Show("This email is longer than 1028 max characters");
                     return false;
                 }
 
-                // Creates the string name from the part of splitText before the '|'
-                name = splitText[0];
-
-                // Creates substrings from newInputText
-                subject = splitText[1].Substring(0, 21);
-                text = splitText[1].Substring(21);
-
                 SetPublicVariable();
-
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////// MESSAGE PROCESSING GOES HERE //////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                MessageBox.Show("Email Coverted");
-
-
+                MessageBox.Show("Email Converted");
                 return true;
             }
 
             // TWEET
             if (tweetMessage.Equals(true))
             {
-                string tweetPattern = @"^((@\w+)\s)+";
+                tweetMessage = false;
 
-                Regex myRegex = new Regex(tweetPattern, RegexOptions.None);
+                string[] splitProText = inputText.Trim().Split(' ');
 
-                Match myMatch = myRegex.Match(inputText);
-
-                if (myMatch.Value.Length > 17)
+                if (splitProText[0].StartsWith("@") && splitProText[0].Length < 16)
                 {
+                    sender = splitProText[0];
+                    splitProText[0] = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("You have entered an incorrect Twitter ID.\nPlease check and try again.");
                     return false;
                 }
 
-                if (myMatch.Success)
+
+                // Concatenate all the elements into a StringBuilder.
+                StringBuilder builder = new StringBuilder();
+                foreach (string value in splitProText)
                 {
-                    sender = myMatch.Value;
+                    builder.Append(value);
+                    builder.Append(' ');
                 }
 
-
-                // Removes the Twitter ID  from the string, leaving the tweet.
-                text = myRegex.Replace(inputText, string.Empty);
+                text = builder.ToString().Trim();
 
 
                 if (text.Length > 140)
                 {
+                    MessageBox.Show("The tweet text is more than 140 characters in length.");
                     return false;
                 }
 
                 SetPublicVariable();
-
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////// MESSAGE PROCESSING GOES HERE //////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
                 MessageBox.Show("Tweet Converted");
-
-
                 return true;
 
             }
@@ -283,7 +302,7 @@ namespace MessageBank
             Text = text;
         }
 
-       /* public void EndOfCycle()
+        public void EndOfCycle()
         {
             header = string.Empty;
             sender = string.Empty;
@@ -297,19 +316,19 @@ namespace MessageBank
             Text = string.Empty;
         }
 
-    */
+
 
 
 
         // Adds message to the list
-        public void AddMessageToList()
+        public void AddMessageToList(string inputText)
         {
             Messages message = new Messages()
             {
                 Header = header,
                 Sender = sender,
                 Subject = subject,
-                Text = text
+                Text = inputText
             };
 
 
@@ -329,7 +348,8 @@ namespace MessageBank
                 MessageBox.Show("Email Saved.");
             }
 
-            
+
+            header = sender = subject = text = string.Empty;
         }
 
 
@@ -367,6 +387,10 @@ namespace MessageBank
 
             if (yesOrNo == MessageBoxResult.Yes)
             {
+                File.WriteAllText(@".\hashtags.csv", String.Empty);
+                File.WriteAllText(@".\mentions.csv", String.Empty);
+                File.WriteAllText(@".\sir.csv", String.Empty);
+
                 Application.Current.Shutdown();
             }
 

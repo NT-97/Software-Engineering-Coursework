@@ -23,47 +23,25 @@ namespace MessageBank
     {
         Validations validation = new Validations();
         Json json = new Json();
-        DataProcess dataProcess = new DataProcess();
-
-        
-        
+        DataProcess processing = new DataProcess();
 
 
 
+        private string processedText = string.Empty;
 
 
+
+        // Constructor
         public Input()
         {
             InitializeComponent();
             validation.RetrieveStoredList();
+            processing.GetTextWords();
+            processing.GetHashTags();
+            processing.GetMentions();
         }
 
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
-        {
-
-
-            string path = @".\MessageBank.json";
-
-            validation.AddMessageToList();
-
-
-            // Converts the whole list of messages into JSON and stores it
-            json.Serialize(validation.listOfMessages, path);
-
-            saveButton.IsEnabled = false;
-
-           // validation.EndOfCycle();
-
-            convertedMessageHeaderTxt.Text = string.Empty;
-            convertedMessageSenderTxt.Text = string.Empty;
-            convertedMessageSubjectTxt.Text = string.Empty;
-            convertedMessageBodyTxt.Text = string.Empty;
-            messageHeaderTxt.Text = string.Empty;
-            messageBodyTxt.Text = string.Empty;
-
-
-        }
 
         private void convertButton_Click(object sender, RoutedEventArgs e)
         {
@@ -88,18 +66,51 @@ namespace MessageBank
 
             string text = validation.Text;
             string header = validation.Header;
+            string subject = validation.Subject;
 
 
-            dataProcess.MessageProcessing(header, ref text);
+            processing.MessageProcessing(header, ref text, subject);
 
 
-            convertedMessageHeaderTxt.Text = header;
+            convertedMessageHeaderTxt.Text = validation.Header;
             convertedMessageSenderTxt.Text = validation.Sender;
             convertedMessageSubjectTxt.Text = validation.Subject;
             convertedMessageBodyTxt.Text = text;
+            processedText = text;
 
-
+            
         }
+
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            string path = @".\MessageBank.json";
+
+            processing.SearchForHashTagsAndMentions(processedText);
+
+            validation.AddMessageToList(processedText);
+
+
+            // Converts the whole list of messages into JSON and stores it
+            json.Serialize(validation.listOfMessages, path);
+
+            saveButton.IsEnabled = false;
+
+            validation.EndOfCycle();
+
+            convertedMessageHeaderTxt.Text = string.Empty;
+            convertedMessageSenderTxt.Text = string.Empty;
+            convertedMessageSubjectTxt.Text = string.Empty;
+            convertedMessageBodyTxt.Text = string.Empty;
+            messageHeaderTxt.Text = string.Empty;
+            messageBodyTxt.Text = string.Empty;
+
+            //processing.addedAlready = false;
+        }
+
+
+
+
 
 
 
