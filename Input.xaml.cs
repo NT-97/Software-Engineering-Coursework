@@ -17,19 +17,25 @@ using System.Windows.Shapes;
 namespace MessageBank
 {
     /// <summary>
-    /// Interaction logic for Input.xaml
+    /// Interaction logic for InputManuallyPage.xaml
     /// </summary>
     public partial class Input : Page
     {
         Validations validation = new Validations();
         Json json = new Json();
+        DataProcess dataProcess = new DataProcess();
+
+        
+        
+
+
 
 
 
         public Input()
         {
             InitializeComponent();
-            validation.LoadStoredList();
+            validation.RetrieveStoredList();
         }
 
 
@@ -37,29 +43,62 @@ namespace MessageBank
         {
 
 
+            string path = @".\MessageBank.json";
+
+            validation.AddMessageToList();
+
 
             // Converts the whole list of messages into JSON and stores it
-            json.Serialize(validation.messagesList);
+            json.Serialize(validation.listOfMessages, path);
+
+            saveButton.IsEnabled = false;
+
+           // validation.EndOfCycle();
+
+            convertedMessageHeaderTxt.Text = string.Empty;
+            convertedMessageSenderTxt.Text = string.Empty;
+            convertedMessageSubjectTxt.Text = string.Empty;
+            convertedMessageBodyTxt.Text = string.Empty;
+            messageHeaderTxt.Text = string.Empty;
+            messageBodyTxt.Text = string.Empty;
+
 
         }
 
         private void convertButton_Click(object sender, RoutedEventArgs e)
         {
             // Validates the message header
-            if (validation.InputMessageCheck(messageHeaderTxt.Text.Trim()).Equals(false))
+            if (validation.MessageHeaderInputValidation(messageHeaderTxt.Text.Trim()).Equals(false))
             {
-                MessageBox.Show("The Header has been input incorrectly, please try again.");
+                MessageBox.Show("You have entered the header incorrectly.");
                 messageHeaderTxt.Focus();
                 return;
             }
 
             // Validates the message body
-            if (validation.InputBodyCheck(messageBodyTxt.Text.Trim()).Equals(false))
+            if (validation.MessageBodyInputValidation(messageBodyTxt.Text.Trim()).Equals(false))
             {
-                MessageBox.Show("The Body has been input incorrectly, please try again");
+                MessageBox.Show("You have entered the body incorrectly.");
                 messageBodyTxt.Focus();
                 return;
             }
+
+            saveButton.IsEnabled = true;
+
+
+            string text = validation.Text;
+            string header = validation.Header;
+
+
+            dataProcess.MessageProcessing(header, ref text);
+
+
+            convertedMessageHeaderTxt.Text = header;
+            convertedMessageSenderTxt.Text = validation.Sender;
+            convertedMessageSubjectTxt.Text = validation.Subject;
+            convertedMessageBodyTxt.Text = text;
+
+
         }
 
 
@@ -69,10 +108,10 @@ namespace MessageBank
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
             // Instantiate an object of the InputManually page
-            MainMenu mainmenu = new MainMenu();
+            MainMenu menuPage = new MainMenu();
 
             // Navigates to the InputManually page
-            NavigationService.Navigate(mainmenu);
+            NavigationService.Navigate(menuPage);
         }
 
         // Method which handles the 'Exit Application' button being clicked
@@ -81,7 +120,7 @@ namespace MessageBank
 
 
             // Calls the method ExitApplicationValidation() from the Validation class.
-            validation.ExitAppValidation();
+            validation.ExitApplicationValidation();
         }
 
 

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +23,7 @@ namespace MessageBank
         #region Object
 
         Validations menuValidation = new Validations();
+        Json jsonClass = new Json();
 
         #endregion
 
@@ -41,15 +41,15 @@ namespace MessageBank
         private void manuallyInputButton_Click(object sender, RoutedEventArgs e)
         {
             // Instantiate an object of the InputManually page
-            Input input = new Input();
+            Input inputManPage = new Input();
 
             // Navigates to the InputManually page
-            NavigationService.Navigate(input);
+            NavigationService.Navigate(inputManPage);
         }
 
         private void autoInputButton_Click(object sender, RoutedEventArgs e)
         {
-            // later
+            MessageBox.Show("Feature not yet implmented.");
         }
 
         private void viewMessagesButton_Click(object sender, RoutedEventArgs e)
@@ -62,9 +62,17 @@ namespace MessageBank
 
         }
 
-        private void exportJson_Click(object sender, RoutedEventArgs e)
+        private void exportJsonButton_Click(object sender, RoutedEventArgs e)
         {
+            menuValidation.RetrieveStoredList();
 
+            // Sets a string as the path for where to store the JSON file.
+            string path = @"C:\Users\John\Desktop\MessageBank.json";
+
+
+            jsonClass.Serialize(menuValidation.listOfMessages, path);
+
+            MessageBox.Show("JSON Exported");
         }
 
 
@@ -76,7 +84,7 @@ namespace MessageBank
         private void exitButton_Click(object sender, RoutedEventArgs e)
         {
             // Calls the method ExitApplicationValidation() from the Validation class.
-            menuValidation.ExitAppValidation();
+            menuValidation.ExitApplicationValidation();
         }
 
 

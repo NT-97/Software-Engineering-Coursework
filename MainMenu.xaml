@@ -6,10 +6,15 @@
       xmlns:local="clr-namespace:MessageBank"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
-      Title="MenuPage">
+      Title="MainMenu">
+    <Grid >
 
-    <Grid>
-        <!--The logo displayed-->
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black" Offset="0"/>
+                <GradientStop Color="#FF34DCE4" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
         <!--Navigation - button (Setup - Arial Font, Size 12, Cannot be tab selected)-->
         <Button x:Name="exitButton" Content="Exit Application" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="exitButton_Click" IsTabStop="False"/>
@@ -23,9 +28,29 @@
 
         <Button x:Name="manuallyInputButton" Content="Input Messages [manually]" HorizontalAlignment="Left" Margin="233,292,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="manuallyInputButton_Click" HorizontalContentAlignment="Left"/>
         <Button x:Name="autoInputButton" Content="Input Messages [from file]" HorizontalAlignment="Left" Margin="233,327,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="autoInputButton_Click"/>
-        <Button x:Name="viewMessagesButton" Content="View Messages" HorizontalAlignment="Left" Margin="233,362,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="viewMessagesButton_Click" />
-        <Button x:Name="exportJson" Content="Export JSON file" HorizontalAlignment="Left" Margin="233,397,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="exportJson_Click" />
+        <Button x:Name="viewMessagesButton" Content="View Stored Messages" HorizontalAlignment="Left" Margin="233,362,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="viewMessagesButton_Click" />
+        <Button x:Name="exportJsonButton" Content="Export JSON file" HorizontalAlignment="Left" Margin="233,397,0,0" VerticalAlignment="Top" Width="180"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="exportJsonButton_Click" />
 
+
+
+
+
+
+
+        <!-- Trending List-->
+        <Label Content="Trending" HorizontalAlignment="Left" Margin="534,243,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
+        <Separator HorizontalAlignment="Left" Height="30" Margin="534,257,0,0" VerticalAlignment="Top" Width="100"/>
+        <ListBox HorizontalAlignment="Left" Height="214" Margin="534,292,0,0" VerticalAlignment="Top" Width="100"/>
+
+        <!-- Mentions List-->
+        <Label Content="Mentions" HorizontalAlignment="Left" Margin="681,243,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
+        <Separator HorizontalAlignment="Left" Height="30" Margin="681,257,0,0" VerticalAlignment="Top" Width="100"/>
+        <ListBox HorizontalAlignment="Left" Height="214" Margin="681,292,0,0" VerticalAlignment="Top" Width="100"/>
+
+        <!-- SIR List-->
+        <Label Content="SIR" HorizontalAlignment="Left" Margin="822,243,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
+        <Separator HorizontalAlignment="Left" Height="30" Margin="822,257,0,0" VerticalAlignment="Top" Width="100"/>
+        <ListBox HorizontalAlignment="Left" Height="214" Margin="822,292,0,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Page>

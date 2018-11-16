@@ -10,14 +10,15 @@ using System.Windows;
 namespace MessageBank
 {
     public class Json
+
     {
 
-        public void Serialize(List<Messages> list)
+        public void Serialize(List<Messages> list, string path)
         {
             try
             {
                 // serialize JSON to a string and then write string to a file
-                File.WriteAllText(@".\MessageBank.json", JsonConvert.SerializeObject(list, Formatting.Indented));
+                File.WriteAllText(path, JsonConvert.SerializeObject(list, Formatting.Indented));
 
                 // Message informing the user that the file has been saved successfully
                 MessageBox.Show("JSON File saved.");
@@ -28,6 +29,9 @@ namespace MessageBank
                 MessageBox.Show(ex.ToString());
             }
         }
+
+
+
 
         public List<Messages> Deserialize()
         {
