@@ -1,338 +1,469 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+
+#endregion
 
 namespace MessageBank
 {
-    public class DataProcess { 
+    public class DataProcess
+    {
     
-        Dictionary<string, string> textWordsDictionary = new Dictionary<string, string>();
-
-        Dictionary<string, int> mentionsDictionary = new Dictionary<string, int>();
-        Dictionary<string, int> hashtagDictionary = new Dictionary<string, int>();
+        Dictionary<string, string> DictionaryTextWords = new Dictionary<string, string>();
+        Dictionary<string, int> DictionaryMentions = new Dictionary<string, int>();
+        Dictionary<string, int> DictionaryHashtags = new Dictionary<string, int>();
 
         List<string> sirList = new List<string>();
-        List<string> listQuarantine = new List<string>();
+        List<string> quarantineList = new List<string>();
 
 
-
-
-        string headerCheck = string.Empty;
-
-        #region Construtor
-
+        // Default Constructor
         public DataProcess()
         {
 
-
         }
 
-        #endregion
-
-        #region Public Methods
-
-        public void GetTextWords()
-        {
-            using (var reader = new StreamReader(@".\textwords.csv"))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    string lineString = line.ToString();
-
-
-                    int firstSpaceIndex = lineString.Trim().IndexOf(",");
-                    string keyString = lineString.Substring(0, firstSpaceIndex);
-                    string valueString = lineString.Substring(firstSpaceIndex + 1);
-
-                    textWordsDictionary.Add(keyString.Trim(), valueString.Trim());
-                }
-
-            }
-
-        }
-
-
-
-
-
-
-
+       
         public void MessageProcessing(string header, ref string text, string subject)
         {
-            headerCheck = header[0].ToString();
+            string checkHeader = string.Empty;
 
-            if (headerCheck.Equals("S"))
+            // Takes the first char of the string header, converts the char to a string then converts it to uppercase
+            checkHeader = header[0].ToString().ToUpper();
+
+            if (checkHeader.Equals("S"))
             {
-                ProccessedSms(ref text);
+                ProcessedSms(ref text);
             }
-
-            if (headerCheck.Equals("E"))
+            else if (checkHeader.Equals("E"))
             {
-                ProccessedEmail(ref text, subject);
+                ProcessedEmail(ref text, subject);
             }
-
-            if (headerCheck.Equals("T"))
+            else if (checkHeader.Equals("T"))
             {
-                ProccessedTweet(ref text);
+                ProcessedTweet(ref text);
+            }
+            else
+            {
+                MessageBox.Show("The Header has been input incorrectly");
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private void ProccessedSms(ref string proText)
+        public void RetrieveTextWordsFromCSV()
         {
-            TextSpeakAbbreviations(ref proText);
+            using (var textWordCSVReader = new StreamReader(@".\textwords.csv"))
+            {
+                while (!textWordCSVReader.EndOfStream)
+                {
+                    var readline = textWordCSVReader.ReadLine();
+                    string lineString = readline.ToString();
 
-            MessageBox.Show("Processing SMS");
+                    int firstComma = lineString.Trim().IndexOf(",");
+                    string keyString = lineString.Substring(0, firstComma);
+                    string valueString = lineString.Substring(firstComma + 1);
+
+                    DictionaryTextWords.Add(keyString.Trim(), valueString.Trim());
+                }
+            }
         }
 
-        private void ProccessedEmail(ref string proText, string subject)
+       
+        public void RetrieveHashtagsFromCSV()
         {
-            FindURL(ref proText);
+            using (var hastagsCSVReader = new StreamReader(@".\hashtags.csv"))
+            {
+                while (!hastagsCSVReader.EndOfStream)
+                {
+                    var readline = hastagsCSVReader.ReadLine();
+
+                    if (readline.Contains("#") && readline.Count() < 50)
+                    {
+                        string lineString = readline.ToString();
+
+                        int firstSpace = lineString.Trim().IndexOf(",");
+                        string keyString = lineString.Substring(0, firstSpace);
+                        string valueString = lineString.Substring(firstSpace + 1);
+
+                        Int32.TryParse(valueString, out int IntValue);
+
+                        DictionaryHashtags.Add(keyString.Trim(), IntValue);
+                    }
+                }
+            }
+        }
+
+       
+        public void RetrieveMentionsFromCSV()
+        {
+            using (var mentionsCSVReader = new StreamReader(@".\mentions.csv"))
+            {
+                while (!mentionsCSVReader.EndOfStream)
+                {
+                    var line = mentionsCSVReader.ReadLine();
+
+                    if (line.Contains("@") && line.Count() < 16)
+                    {
+                        string lineString = line.ToString();
+
+                        int firstSpaceIndex = lineString.Trim().IndexOf(",");
+                        string keyString = lineString.Substring(0, firstSpaceIndex);
+                        string valueString = lineString.Substring(firstSpaceIndex + 1);
+
+                        Int32.TryParse(valueString, out int valueInt);
+
+                        DictionaryMentions.Add(keyString.Trim(), valueInt);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method retrieves sir values stored in sir.csv file as a string per line
+        /// Checks that the sir code is formatted correctly then stores the string in a List
+        /// </summary>
+        public void RetrieveSIRFromCSV()
+        {
+            using (var sirCSVReader = new StreamReader(@".\sir.csv"))
+            {
+                while (!sirCSVReader.EndOfStream)
+                {
+                    var readline = sirCSVReader.ReadLine();
+
+                    if (readline[3].ToString().Equals("-") && readline[7].ToString().Equals("-"))
+                    {
+                        sirList.Add(readline.ToString());
+                    }
+                }
+            }
+        }
+        
+        public void FindSIR(string processedText)
+        {
+            GetSortCodeAndIncident(processedText);
+            AddSIRListToCSV();
+        }
+
+        
+        public void FindHashtagsAndMentions(string processedText)
+        {
+            FindMentions(processedText);
+            FindHashTags(processedText);
+            AddDictionaryOfHashtagsToCSV();
+            AddDictionaryOfMentionsToCSV();
+        }
+
+       
+     
+        private void ProcessedSms(ref string processedText)
+        {
+            FindAndReplaceTextSpeakAbbreviations(ref processedText);
+        }
+
+      
+
+       
+        private void ProcessedEmail(ref string processedText, string subject)
+        {
+            FindURL(ref processedText);
 
             if (subject.Trim().StartsWith("SIR"))
             {
-                MessageBox.Show("Found SIR");
-              
-            
+                ConfigureSIR(ref processedText);
+            }
+        }
+
+    
+        private void ConfigureSIR(ref string processedText)
+        {
+            // Splits the string into a string array
+            string[] splitProcessedText = processedText.Trim().Split(' ');
+
+            // Finds the word Nature in the string then replaces it with \nNature so that a new line is created before Nature
+            if (splitProcessedText[3].Equals("Nature"))
+            {
+                splitProcessedText[3] = $"\n{splitProcessedText[3]}";
             }
 
-            MessageBox.Show("Processing EMAIL");
-        }
-
-        private void ProccessedTweet(ref string proText)
-        {
-            TextSpeakAbbreviations(ref proText);
-
-            MessageBox.Show("Processing TWEET");
-        }
-
-
-
-        private void TextSpeakAbbreviations(ref string proText)
-        {
-            string[] splitProText = proText.Split(' ');
-
-            for (int i = 0; i < splitProText.Length; i++)
+            // Formats for Nature of Incident with 1 words
+            if (splitProcessedText[6].Equals("Raid") || splitProcessedText[6].Equals("Terrorism") || splitProcessedText[6].Equals("Intelligence") || splitProcessedText[6].Equals("Theft")) 
             {
-                foreach (KeyValuePair<string, string> abbreviation in textWordsDictionary)
+                if (splitProcessedText.Length > 7)
                 {
-                    if (abbreviation.Key.Equals(splitProText[i]))
-                    {
-                        splitProText[i] = ($"{abbreviation.Key.Trim()} <{abbreviation.Value.Trim()}>");
-                    }
+                    splitProcessedText[7] = $"\n{splitProcessedText[7]}";
                 }
             }
 
-            // Concatenate all the elements into a StringBuilder.
-            StringBuilder builder = new StringBuilder();
-            foreach (string value in splitProText)
+            // Formats for Nature of Incident with 2 words
+            if (splitProcessedText[6].Equals("Staff") || splitProcessedText[6].Equals("Customer") || splitProcessedText[6].Equals("ATM") ||
+                splitProcessedText[6].Equals("Bomb") || splitProcessedText[6].Equals("Suspicious") || splitProcessedText[6].Equals("Cash"))  
             {
-                builder.Append(value);
-                builder.Append(' ');
+                if (splitProcessedText.Length > 8)
+                {
+                    splitProcessedText[8] = $"\n{splitProcessedText[8]}";
+                }
             }
 
-            proText = builder.ToString();
+            
+
+            // Appends all the values stored in the string array
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string value in splitProcessedText)
+            {
+                stringBuilder.Append(value);
+                stringBuilder.Append(' ');
+            }
+
+            processedText = stringBuilder.ToString();
         }
 
-        private void FindHashTags(string proText)
+   
+        private void FindURL(ref string processedText)
         {
-            string[] splitProText = proText.Split(' ');
-            bool hashtagExists = false;
+            UrlAttribute url = new UrlAttribute();
 
-            for (int i = 0; i < splitProText.Length; i++)
+            string[] splitProcessedText = processedText.Split(' ');
+
+            for (int i = 0; i < splitProcessedText.Length; i++)
             {
-                hashtagExists = false;
-
-                if (splitProText[i].StartsWith("#"))
+                if (url.IsValid(splitProcessedText[i]) || splitProcessedText[i].StartsWith("www."))
                 {
+                    quarantineList.Add(splitProcessedText[i]);
+                    splitProcessedText[i] = "'<URL Quarantined>'";
+                }
+            }
 
-                    for (int q = 0; q < hashtagDictionary.Count; q++)
+            // Appends all the values stored in the string array
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string value in splitProcessedText)
+            {
+                stringBuilder.Append(value);
+                stringBuilder.Append(' ');
+            }
+
+            processedText = stringBuilder.ToString();
+        }
+
+     
+        private void GetSortCodeAndIncident(string processedText)
+        {
+            string[] splitProcessedText = processedText.Trim().Split(' ');
+            string[] natureOfIncident = {"Staff Attack",  "Raid","Theft" , "Customer Attack", "Staff Abuse", "Bomb Threat", "Terrorism", "Suspicious Incident", "Cash Loss", "Intelligence", "ATM Theft" };
+
+            string incident = string.Empty;
+            string code = string.Empty;
+
+            // Checks the array index 3 to confirm the length of the value stored is 8 characters long
+            if (!splitProcessedText[2].ToString().Trim().Count().Equals(8))
+            {
+                MessageBox.Show("The Sort Code you have entered is incorrect.");
+                return;
+            }
+            else
+            {
+                code = splitProcessedText[2];
+            }
+
+
+            if (splitProcessedText[7].Equals("Staff"))
+            {
+                if (splitProcessedText[8].Equals("Attack"))
+                {
+                    incident = "Staff Attack";
+                }
+                else
+                {
+                    incident = "Staff Abuse";
+                }
+            }
+            else
+            {
+                foreach (string str in natureOfIncident)
+                {
+                    if (str.StartsWith(splitProcessedText[6]))
                     {
-                        var hashtagElement = hashtagDictionary.ElementAt(q);
+                        incident = str;
+                        break;
+                    }
+                }
+            }
+            
+            string stringInput = ($"[{code}] - [{incident}]");
 
+            // Adds the string to the sirList, only if the string does not already exist on the list
+            if (!sirList.Contains(stringInput))
+            {
+                sirList.Add(stringInput);
+            }
+            else
+            {
+                MessageBox.Show("The Sort Code and Nature of Incident already exist on the SIR list.");
+                return;
+            }
+        }
 
-                        if (hashtagElement.Key.Equals(splitProText[i]))
+  
+
+      
+        private void ProcessedTweet(ref string processedText)
+        {
+            FindAndReplaceTextSpeakAbbreviations(ref processedText);
+        }
+
+       
+        private void FindHashTags(string processedText)
+        {
+            string[] splitProcessedText = processedText.Split(' ');
+            bool hashtagOccurs = false;
+
+            for (int i = 0; i < splitProcessedText.Length; i++)
+            {
+                hashtagOccurs = false;
+
+                if (splitProcessedText[i].StartsWith("#"))
+                {
+                    for (int q = 0; q < DictionaryHashtags.Count; q++)
+                    {
+                        var hashtagElement = DictionaryHashtags.ElementAt(q);
+
+                        if (hashtagElement.Key.Equals(splitProcessedText[i]))
                         {
-                            hashtagDictionary[splitProText[i]] = hashtagDictionary[splitProText[i]] + 1;
+                            DictionaryHashtags[splitProcessedText[i]] = DictionaryHashtags[splitProcessedText[i]] + 1;
                             MessageBox.Show("Updated a hashtag entry");
-                            hashtagExists = true;
+                            hashtagOccurs= true;
                         }
-
                     }
 
-                    if (hashtagExists.Equals(false))
+                    if (hashtagOccurs.Equals(false))
                     {
-                        hashtagDictionary.Add(splitProText[i], 1);
+                        DictionaryHashtags.Add(splitProcessedText[i], 1);
                         MessageBox.Show("Found a hashtag");
                     }
                 }
             }
         }
 
-        private void FindMentions(string proText)
+        
+        private void FindMentions(string processedText)
         {
-            string[] splitProText = proText.Split(' ');
-            bool mentionExists = false;
+            string[] splitProcessedText = processedText.Split(' ');
+            bool mentionOccurs = false;
 
 
-            for (int i = 0; i < splitProText.Length; i++)
+            for (int i = 0; i < splitProcessedText.Length; i++)
             {
-                mentionExists = false;
+                mentionOccurs = false;
 
-                if (splitProText[i].StartsWith("@"))
+                if (splitProcessedText[i].StartsWith("@"))
                 {
 
-                    for (int w = 0; w < mentionsDictionary.Count; w++)
+                    for (int w = 0; w < DictionaryMentions.Count; w++)
                     {
-                        var mentionElement = mentionsDictionary.ElementAt(w);
+                        var mentionElement = DictionaryMentions.ElementAt(w);
 
-
-                        if (mentionElement.Key.Equals(splitProText[i]))
+                        if (mentionElement.Key.Equals(splitProcessedText[i]))
                         {
-                            mentionsDictionary[splitProText[i]] = mentionsDictionary[splitProText[i]] + 1;
+                            DictionaryMentions[splitProcessedText[i]] = DictionaryMentions[splitProcessedText[i]] + 1;
                             MessageBox.Show("Updated a mention entry");
-                            mentionExists = true;
+                            mentionOccurs = true;
                         }
                     }
 
-                    if (mentionExists.Equals(false))
+                    if (mentionOccurs.Equals(false))
                     {
-                        mentionsDictionary.Add(splitProText[i], 1);
+                        DictionaryMentions.Add(splitProcessedText[i], 1);
                         MessageBox.Show("Found a mention");
                     }
                 }
             }
         }
 
-        private void FindURL(ref string proText)
+
+    
+
+
+        private void FindAndReplaceTextSpeakAbbreviations(ref string processedText)
         {
+            string[] splitProcessedText = processedText.Trim().Split(' ');
+            bool set = false;
 
-            UrlAttribute url = new UrlAttribute();
-
-            string[] splitProText = proText.Split(' ');
-
-
-            for (int i = 0; i < splitProText.Length; i++)
+            for (int i = 0; i < splitProcessedText.Length; i++)
             {
-                if (url.IsValid(splitProText[i]) || splitProText[i].StartsWith("www."))
+                foreach (KeyValuePair<string, string> abbrev in DictionaryTextWords)
                 {
-                    listQuarantine.Add(splitProText[i]);
-                    splitProText[i] = "'<URL Quarantined>'";
+                    if (splitProcessedText[i].Equals(abbrev.Key))
+                    {
+                        splitProcessedText[i] = ($"{abbrev.Key.Trim()} <{abbrev.Value.Trim()}>");
+                        set = true;
+                    }
+
+                    if (splitProcessedText[i].StartsWith(abbrev.Key) && set.Equals(false))
+                    {
+                        if (!splitProcessedText[i].All(char.IsLetter))
+                        {
+                            string miscChar = splitProcessedText[i][(splitProcessedText[i].Count() - 1)].ToString();
+                            splitProcessedText[i] = ($"{abbrev.Key.Trim()} <{abbrev.Value.Trim()}>{miscChar}");
+                        }
+                    }
                 }
             }
 
-            // Concatenate all the elements into a StringBuilder.
-            StringBuilder builder = new StringBuilder();
-            foreach (string value in splitProText)
+            // Appends all the values stored in the string array
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string value in splitProcessedText)
             {
-                builder.Append(value);
-                builder.Append(' ');
+                stringBuilder.Append(value);
+                stringBuilder.Append(' ');
             }
 
-            proText = builder.ToString();
+            processedText = stringBuilder.ToString();
         }
+
+
+
+       
+        private void AddDictionaryOfHashtagsToCSV()
+        {
+            using (var write = new StreamWriter(@".\hashtags.csv"))
+            {
+                foreach (var pair in DictionaryHashtags)
+                {
+                    write.WriteLine($"{pair.Key},{pair.Value}");
+                }
+            }
+        }
+
+
+      
+        private void AddDictionaryOfMentionsToCSV()
+        {
+            using (var write = new StreamWriter(@".\mentions.csv"))
+            {
+                foreach (var pair in DictionaryMentions)
+                {
+                    write.WriteLine($"{pair.Key},{pair.Value}");
+                }
+            }
+        }
+
         
-
-        private void AddHashTagDictionaryToFile()
+        private void AddSIRListToCSV()
         {
-            using (var writer = new StreamWriter(@".\hashtags.csv"))
+            using (var write = new StreamWriter(@".\sir.csv"))
             {
-                foreach (var pair in hashtagDictionary)
+                foreach (var entry in sirList)
                 {
-                    writer.WriteLine($"{pair.Key},{pair.Value}");
+                    write.WriteLine($"{entry}");
                 }
             }
         }
 
-
-
-        private void AddMentionsDictionaryToFile()
-        {
-            using (var writer = new StreamWriter(@".\mentions.csv"))
-            {
-                foreach (var pair in mentionsDictionary)
-                {
-                    writer.WriteLine($"{pair.Key},{pair.Value}");
-                }
-            }
-        }
-
-
-     
-        public void GetHashTags()
-        {
-            using (var reader = new StreamReader(@".\hashtags.csv"))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-
-                    if (line.Contains("#") && line.Count() < 50)
-                    {
-                        string lineString = line.ToString();
-
-
-                        int firstSpaceIndex = lineString.Trim().IndexOf(",");
-                        string keyString = lineString.Substring(0, firstSpaceIndex);
-                        string valueString = lineString.Substring(firstSpaceIndex + 1);
-
-                        Int32.TryParse(valueString, out int valueInt);
-
-                        hashtagDictionary.Add(keyString.Trim(), valueInt);
-                    }
-                }
-
-            }
-        }
-
-        public void GetMentions()
-        {
-            using (var reader = new StreamReader(@".\mentions.csv"))
-            {
-
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-
-                    if (line.Contains("@") && line.Count() < 16)
-                    {
-                        string lineString = line.ToString();
-
-
-
-                        int firstSpaceIndex = lineString.Trim().IndexOf(",");
-                        string keyString = lineString.Substring(0, firstSpaceIndex);
-                        string valueString = lineString.Substring(firstSpaceIndex + 1);
-
-                        Int32.TryParse(valueString, out int valueInt);
-
-                        mentionsDictionary.Add(keyString.Trim(), valueInt);
-                    }
-
-                }
-
-            }
-        }
-
-        public void SearchForHashTagsAndMentions(string proText)
-        {
-            FindMentions(proText);
-            FindHashTags(proText);
-            AddHashTagDictionaryToFile();
-            AddMentionsDictionaryToFile();
-        }
-
-        #endregion  
-
+  
     }
 }

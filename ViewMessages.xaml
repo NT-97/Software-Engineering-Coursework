@@ -8,37 +8,41 @@
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="ViewMessagesPage">
     <Grid >
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black" Offset="0"/>
-                <GradientStop Color="#FF34DCE4" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-
-        <Label Content="Message Header:" HorizontalAlignment="Left" Height="30" Margin="331,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Width="123"/>
-        <TextBox x:Name="messageHeaderTxt" HorizontalAlignment="Left" Height="30" Margin="331,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True"/>
-
-        <Label Content="Message Sender:" HorizontalAlignment="Left" Height="30" Margin="495,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Width="123"/>
-        <TextBox x:Name="messageSenderTxt" HorizontalAlignment="Left" Height="30" Margin="495,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True"/>
 
 
-
-        <Label Content="Message Subject:" HorizontalAlignment="Left" Height="30" Margin="689,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Width="123"/>
-        <TextBox x:Name="messageSubjectTxt" HorizontalAlignment="Left" Height="30" Margin="689,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" Foreground="Black" FontFamily="Arial" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True"/>
-
-        <Label Content="Message Body:" HorizontalAlignment="Left" Height="30" Margin="331,248,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Arial" FontSize="14" Width="123" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
-        <TextBox x:Name="messageBodyTxt" HorizontalAlignment="Left" Margin="331,286,0,0" TextWrapping="Wrap" AcceptsReturn="True" Text="" VerticalAlignment="Top" Height="358" Width="538" Foreground="Black" FontFamily="Arial" FontSize="14" HorizontalContentAlignment="Left" Padding="3" IsReadOnly="True"/>
+        <Image Source="Logo1.png" Margin="380,0,0,564" HorizontalAlignment="Left" Width="527"/>
 
 
+        <TextBox x:Name="header_txt" HorizontalAlignment="Left" Height="30" Margin="331,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150" Foreground="Black" FontFamily="Courier" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True" BorderBrush="Black" BorderThickness="3"/>
+        <Label Width="123"  HorizontalAlignment="Left" Height="30" Margin="331,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Courier" FontSize="14"  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontWeight="ExtraBlack">
+            <TextBlock TextDecorations="Underline">Message Header</TextBlock>
+        </Label>
 
 
-        <!--Navigation - button (Setup - Arial Font, Size 12, Cannot be tab selected)-->
-        <Button x:Name="exitButton" Content="Exit Application" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="exitButton_Click" IsTabStop="False"/>
-        <Button x:Name="backButton" Content="Back to Menu" HorizontalAlignment="Left" Margin="1020,695,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" IsTabStop="False" Click="backButton_Click"/>
+        <TextBox x:Name="sender_txt" HorizontalAlignment="Left" Height="30" Margin="495,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" Foreground="Black" FontFamily="Courier" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True" BorderBrush="Black" BorderThickness="3"/>
+        <Label Width="123"  HorizontalAlignment="Left" Height="30" Margin="495,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Courier" FontSize="14"  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontWeight="ExtraBlack">
+            <TextBlock TextDecorations="Underline">Message Sender</TextBlock>
+        </Label>
 
 
-        <Button x:Name="nextButton" Content="&gt; &gt; Next Message &gt; &gt;" HorizontalAlignment="Left" Margin="719,695,0,0" VerticalAlignment="Top" Width="150"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" IsTabStop="False" Click="nextButton_Click" />
-        <Button x:Name="previousButton" Content="&lt; &lt; Previous Message &lt; &lt;" HorizontalAlignment="Left" Margin="331,695,0,0" VerticalAlignment="Top" Width="150"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" IsTabStop="False" Click="previousButton_Click" />
+        <TextBox x:Name="subject_txt" HorizontalAlignment="Left" Height="30" Margin="689,206,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" Foreground="Black" FontFamily="Courier" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsReadOnly="True" BorderBrush="Black" BorderThickness="3"/>
+        <Label Width="123"  HorizontalAlignment="Left" Height="30" Margin="689,170,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Courier" FontSize="14"  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontWeight="ExtraBlack">
+            <TextBlock TextDecorations="Underline">Message Subject</TextBlock>
+        </Label>
+
+        <TextBox x:Name="body_txt" HorizontalAlignment="Left" Margin="331,286,0,0" TextWrapping="Wrap" AcceptsReturn="True" Text="" VerticalAlignment="Top" Height="358" Width="538" Foreground="Black" FontFamily="Courier" FontSize="14" HorizontalContentAlignment="Left" Padding="3" IsReadOnly="True" BorderBrush="Black" BorderThickness="3"/>
+        <Label Width="123"  HorizontalAlignment="Left" Height="30" Margin="331,248,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Courier" FontSize="14"  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontWeight="ExtraBlack">
+            <TextBlock TextDecorations="Underline">Message Body</TextBlock>
+        </Label>
+
+
+
+        <Button x:Name="btn_Exit" Content="Exit Application" HorizontalAlignment="Left" Margin="1020,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" Click="btn_Exit_Click" IsTabStop="False"/>
+        <Button x:Name="btn_Back" Content="Back to Menu" HorizontalAlignment="Left" Margin="1020,695,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" IsTabStop="False" Click="btn_Back_Click"/>
+
+
+        <Button x:Name="btn_Next" Content="&gt; &gt; Next Message &gt; &gt;" HorizontalAlignment="Left" Margin="719,695,0,0" VerticalAlignment="Top" Width="150"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" IsTabStop="False" Click="btn_Next_Click" />
+        <Button x:Name="btn_Previous" Content="&lt; &lt; Previous Message &lt; &lt;" HorizontalAlignment="Left" Margin="331,695,0,0" VerticalAlignment="Top" Width="150"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" IsTabStop="False" Click="btn_Previous_Click" />
 
 
     </Grid>

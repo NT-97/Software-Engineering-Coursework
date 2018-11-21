@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessageBank"
         mc:Ignorable="d"
-        d:DesignHeight="1100" d:DesignWidth="1250"
+        d:DesignHeight="800" d:DesignWidth="1200"
         Title="Napier Message Bank" >
     <Grid>
-        <!--A Main Frame set up to display various pages Height is 800 and Width is 1200 with a black border-->
-        <Frame x:Name="MainFrame" Content="" HorizontalAlignment="Center" Height="800" Width="1200" Margin="10,10,10,10" VerticalAlignment="Center"  BorderBrush="#3498db" BorderThickness="4" NavigationUIVisibility="hidden" />
+        <Frame x:Name="MainFrame" Content="" HorizontalAlignment="Center" Height="800" Width="1250" Margin="10,10,10,10" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="20" NavigationUIVisibility="hidden" />
     </Grid>
 </Window>

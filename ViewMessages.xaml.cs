@@ -16,35 +16,32 @@ using System.Windows.Shapes;
 
 namespace MessageBank
 {
-    /// <summary>
-    /// Interaction logic for ViewMessagesPage.xaml
-    /// </summary>
     public partial class ViewMessages 
     {
         Validations validation = new Validations();
         Json json = new Json();
 
-        List<Messages> listOfMessages = new List<Messages>();
+        List<Messages> messagesList = new List<Messages>();
 
-        int displayCounter = 0;
+        int messageCounter = 0;
 
         public ViewMessages()
         {
             InitializeComponent();
             RetrieveStoredList();
-            DisplayInitialMessage();
+            DisplayFirstMessage();
 
         }
 
 
         #region Click Events
 
-        private void nextButton_Click(object sender, RoutedEventArgs e)
+        private void btn_Next_Click(object sender, RoutedEventArgs e)
         {
             DisplayNextMessage();
         }
 
-        private void previousButton_Click(object sender, RoutedEventArgs e)
+        private void btn_Previous_Click(object sender, RoutedEventArgs e)
         {
             DisplayPreviousMessage();
         }
@@ -54,17 +51,15 @@ namespace MessageBank
 
         #region Navigation Buttons
 
-        private void backButton_Click(object sender, RoutedEventArgs e)
+        private void btn_Back_Click(object sender, RoutedEventArgs e)
         {
-            // Instantiate an object of the InputManually page
-            MainMenu menuPage = new MainMenu();
-
-            // Navigates to the InputManually page
-            NavigationService.Navigate(menuPage);
+            MainMenu mainmenu = new MainMenu();
+            
+            NavigationService.Navigate(mainmenu);
         }
 
         // Method which handles the 'Exit Application' button being clicked
-        private void exitButton_Click(object sender, RoutedEventArgs e)
+        private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
 
 
@@ -77,14 +72,14 @@ namespace MessageBank
 
         #region Private Methods
 
-        private void DisplayInitialMessage()
+        private void DisplayFirstMessage()
         {
-            if (displayCounter < (listOfMessages.Count - 1))
+            if (messageCounter < (messagesList.Count - 1))
             {
-                messageHeaderTxt.Text = listOfMessages[displayCounter].Header;
-                messageSenderTxt.Text = listOfMessages[displayCounter].Sender;
-                messageSubjectTxt.Text = listOfMessages[displayCounter].Subject;
-                messageBodyTxt.Text = listOfMessages[displayCounter].Text;
+                header_txt.Text = messagesList[messageCounter].Header;
+                sender_txt.Text = messagesList[messageCounter].Sender;
+                subject_txt.Text = messagesList[messageCounter].Subject;
+                body_txt.Text = messagesList[messageCounter].Text;
 
             }
             else
@@ -97,14 +92,14 @@ namespace MessageBank
 
         private void DisplayNextMessage()
         {
-            if (displayCounter < (listOfMessages.Count - 1))
+            if (messageCounter < (messagesList.Count - 1))
             {
-                displayCounter = displayCounter + 1;
+                messageCounter = messageCounter + 1;
 
-                messageHeaderTxt.Text = listOfMessages[displayCounter].Header;
-                messageSenderTxt.Text = listOfMessages[displayCounter].Sender;
-                messageSubjectTxt.Text = listOfMessages[displayCounter].Subject;
-                messageBodyTxt.Text = listOfMessages[displayCounter].Text;
+                header_txt.Text = messagesList[messageCounter].Header;
+                sender_txt.Text = messagesList[messageCounter].Sender;
+                subject_txt.Text = messagesList[messageCounter].Subject;
+                body_txt.Text = messagesList[messageCounter].Text;
 
             }
             else
@@ -115,14 +110,14 @@ namespace MessageBank
 
         private void DisplayPreviousMessage()
         {
-            if (displayCounter > 0)
+            if (messageCounter > 0)
             {
-                displayCounter = displayCounter - 1;
+                messageCounter = messageCounter - 1;
 
-                messageHeaderTxt.Text = listOfMessages[displayCounter].Header;
-                messageSenderTxt.Text = listOfMessages[displayCounter].Sender;
-                messageSubjectTxt.Text = listOfMessages[displayCounter].Subject;
-                messageBodyTxt.Text = listOfMessages[displayCounter].Text;
+                header_txt.Text = messagesList[messageCounter].Header;
+                sender_txt.Text = messagesList[messageCounter].Sender;
+                subject_txt.Text = messagesList[messageCounter].Subject;
+                body_txt.Text = messagesList[messageCounter].Text;
 
             }
             else
@@ -139,7 +134,7 @@ namespace MessageBank
             try
             {
                 // Returns the list that is stored as JSON             
-                listOfMessages = json.Deserialize();
+                messagesList = json.Deserialize();
 
                 counter = counter + 1;
 

@@ -59,6 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AccessLists.xaml.cs">
+      <DependentUpon>AccessLists.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataProcess.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Messages.cs" />
@@ -66,6 +69,10 @@
     <Compile Include="ViewMessages.xaml.cs">
       <DependentUpon>ViewMessages.xaml</DependentUpon>
     </Compile>
+    <Page Include="AccessLists.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Input.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo1.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

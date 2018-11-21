@@ -1,45 +1,46 @@
-﻿using Newtonsoft.Json;
+﻿
+
+#region Usings
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.ComponentModel.DataAnnotations;
+
+
+#endregion
 
 namespace MessageBank
 {
     public class Validations
     {
+        #region Objects / Data Structure / Variables
+
+        Json json = new Json();
+
+        public List<Messages> messagesList = new List<Messages>();
+
         bool smsMessage = false;
         bool emailMessage = false;
         bool tweetMessage = false;
-
 
         string header = string.Empty;
         string sender = string.Empty;
         string text = string.Empty;
         string subject = string.Empty;
-        string name = string.Empty;
-
-
-        public List<Messages> listOfMessages = new List<Messages>();
-
-        Messages messageToReturn;
+       
 
         public string Header = string.Empty;
         public string Sender = string.Empty;
         public string Subject = string.Empty;
         public string Text = string.Empty;
 
+        #endregion
 
-
-
-
-        Json jsonClass = new Json();
-
+        #region Constructor
 
         // Default Constructor
         public Validations()
@@ -47,19 +48,15 @@ namespace MessageBank
 
         }
 
+        #endregion
+
+        #region Public Methods
 
 
-
-        public bool MessageHeaderInputValidation(string inputText)
+        public bool MessageHeaderValidation(string textInput)
         {
-            // Stores the first character of inputText as the string _inputText
-            string _inputText = inputText[0].ToString();
-
             // Trims the input then stores it as the string header
-            header = inputText.Trim();
-
-            // Stores a substring of numeric as the string subStringNumeric
-            string subStringNumeric = header.Substring(1, 9);
+            header = textInput.Trim();
 
             // Checks the length of the input
             if (!(header.Length).Equals(10))
@@ -67,78 +64,80 @@ namespace MessageBank
                 return false;
             }
 
+            // Stores a substring of numeric as the string subStringNumeric
+            string numericSubString = header.Substring(1, 9);
+
             // Checks the substring is all numbers
-            if (subStringNumeric.All(char.IsDigit).Equals(false))
+            if (numericSubString.All(char.IsDigit).Equals(false))
             {
                 return false;
             }
 
+            // Stores the first character of inputText as the string _inputText
+            string _textInput = textInput[0].ToString();
 
 
-
-            if (_inputText.ToUpper().Equals("S"))
+            if (_textInput.ToUpper().Equals("S"))
             {
                 smsMessage = true;
                 return true;
             }
-
-            if (_inputText.ToUpper().Equals("E"))
+            else if (_textInput.ToUpper().Equals("E"))
             {
                 emailMessage = true;
                 return true;
             }
-
-            if (_inputText.ToUpper().Equals("T"))
+            else if (_textInput.ToUpper().Equals("T"))
             {
                 tweetMessage = true;
                 return true;
+            }
+            else
+            {
+                MessageBox.Show("The header is incorrect. Please check and try again.");
             }
 
             return false;
         }
 
-        public bool MessageBodyInputValidation(string inputText)
+        
+        public bool MessageBodyValidation(string textInput)
         {
-            EmailAddressAttribute emailAddressCheck = new EmailAddressAttribute();
-            PhoneAttribute phoneNumberCheck = new PhoneAttribute();
-
-            // SMS
+            EmailAddressAttribute emailCheck = new EmailAddressAttribute();
+            PhoneAttribute PhoneCheck = new PhoneAttribute();
+            
+            
+            //SMS
             if (smsMessage.Equals(true))
             {
                 bool smsCheck = true;
                 smsMessage = false;
-
+                
                 while (smsCheck)
                 {
-                    if (inputText.Length > 15)
+                    if (textInput.Length > 20)
                     {
-                        for (int i = 15; i > 7; i--)
+                        for (int i = 20; i > 7; i--)
                         {
-                            sender = inputText.Trim().Substring(0, i);
-
-                            if (phoneNumberCheck.IsValid(sender))
+                            sender = textInput.Trim().Substring(0, i);
+                            
+                            if (PhoneCheck.IsValid(sender))
                             {
-
-                                text = inputText.Trim().Substring(i);
-
-
+                                text = textInput.Trim().Substring(i);
                                 smsCheck = false;
                                 break;
                             }
                         }
                     }
-                    else if (inputText.Length > 7 && inputText.Length < 16)
+                    else if (textInput.Length > 7 && textInput.Length < 21)
                     {
-                        for (int i = inputText.Length; i > 7; i--)
+                        for (int i = textInput.Length; i > 7; i--)
                         {
-                            sender = inputText.Trim().Substring(0, i);
-
-                            if (phoneNumberCheck.IsValid(sender))
+                            sender = textInput.Trim().Substring(0, i);
+                            
+                            if (PhoneCheck.IsValid(sender))
                             {
-
-                                text = inputText.Trim().Substring(i);
-
-
+                                text = textInput.Trim().Substring(i);
                                 smsCheck = false;
                                 break;
                             }
@@ -149,115 +148,104 @@ namespace MessageBank
                         MessageBox.Show("The phone number entered, is not a valid phone number.");
                         return false;
                     }
-
                 }
 
-                SetPublicVariable();
-                MessageBox.Show("SMS Converted");
+                // Checks the length of the SMS
+                if (text.Length > 140)
+                {
+                    MessageBox.Show("The SMS is too long. It can only be upto a maximum of 140 characters");
+                    return false;
+                }
+
+                SetGlobalVariable();
                 return true;
             }
 
-            // EMAIL
+            //Email
             if (emailMessage.Equals(true))
             {
                 emailMessage = false;
 
-                string[] splitProText = inputText.Trim().Split(' ');
+                string[] splitProcessedtext = textInput.Trim().Split(' ');
 
-                string[] nameArray = { };
-                string[] subjectAndTextArray = { };
+                
+                string[] SubjectAndTextArray = { };
 
+                string SubjectAndText = string.Empty;
+                bool emailAddressSpotted = false;
 
-                string subjectAndText = string.Empty;
-                bool emailAddressFound = false;
-
-
-
-                for (int i = 0; i < splitProText.Length; i++)
+                for (int i = 0; i < splitProcessedtext.Length; i++)
                 {
-                    if (splitProText[i].Contains("@"))
+                    if (splitProcessedtext[i].Contains("@"))
                     {
                         // Checks if the email is a valid email address
-                        if (emailAddressCheck.IsValid(splitProText[i]))
+                        if (emailCheck.IsValid(splitProcessedtext[i]))
                         {
-                            emailAddressFound = true;
-                            sender = splitProText[i];
-                            splitProText[i] = "";
+                            emailAddressSpotted = true;
+                            sender = splitProcessedtext[i];
+                            splitProcessedtext[i] = "";
 
-                            nameArray = splitProText.Take(i).ToArray();
-                            subjectAndTextArray = splitProText.Skip(i).ToArray();
+                            
+                            SubjectAndTextArray = splitProcessedtext.Skip(i).ToArray();
 
                             break;
                         }
                     }
                 }
 
-                if (emailAddressFound.Equals(false))
+                if (emailAddressSpotted.Equals(false))
                 {
                     MessageBox.Show("You have entered an incorrect email address.");
                     return false;
                 }
 
-
-
-                // Concatenate all the elements into a StringBuilder.
-                StringBuilder nameBuilder = new StringBuilder();
-                foreach (string value in nameArray)
-                {
-                    nameBuilder.Append(value);
-                    nameBuilder.Append(' ');
-                }
-
-                name = nameBuilder.ToString().Trim();
-
+                
 
                 // Concatenate all the elements into a StringBuilder.
                 StringBuilder subjectAndTextBuilder = new StringBuilder();
-                foreach (string value in subjectAndTextArray)
+                foreach (string value in SubjectAndTextArray)
                 {
                     subjectAndTextBuilder.Append(value);
                     subjectAndTextBuilder.Append(' ');
                 }
 
-                subjectAndText = subjectAndTextBuilder.ToString().Trim();
+                SubjectAndText = subjectAndTextBuilder.ToString().Trim();
 
-
-
-
-
-
-
-
-
-                // Creates substrings from newInputText
-                subject = subjectAndText.Trim().Substring(0, 20);
-                text = subjectAndText.Trim().Substring(20);
-
-
+                if (SubjectAndText.ToUpper().StartsWith("SIR"))
+                {
+                    // Creates substrings from newInputText
+                    subject = SubjectAndText.Trim().Substring(0, 12);
+                    text = SubjectAndText.Trim().Substring(12);
+                }
+                else
+                {
+                    // Creates substrings from newInputText
+                    subject = SubjectAndText.Trim().Substring(0, 20);
+                    text = SubjectAndText.Trim().Substring(20);
+                }
 
                 // Checks the email doesn't exceed the maximum length
-                if (text.Length > 1028)
+                if (text.Length > 1048)
                 {
                     MessageBox.Show("This email is longer than 1028 max characters");
                     return false;
                 }
 
-                SetPublicVariable();
-                MessageBox.Show("Email Converted");
+                SetGlobalVariable();
                 return true;
             }
 
-            // TWEET
+            //Tweet
             if (tweetMessage.Equals(true))
             {
                 tweetMessage = false;
 
-                string[] splitProText = inputText.Trim().Split(' ');
+                string[] splitProcessedText = textInput.Trim().Split(' ');
 
-                if (splitProText[0].StartsWith("@") && splitProText[0].Length < 16)
+                if (splitProcessedText[0].StartsWith("@") && splitProcessedText[0].Length < 16)
                 {
-                    sender = splitProText[0];
-                    splitProText[0] = string.Empty;
+                    sender = splitProcessedText[0];
+                    splitProcessedText[0] = string.Empty;
                 }
                 else
                 {
@@ -265,50 +253,38 @@ namespace MessageBank
                     return false;
                 }
 
-
                 // Concatenate all the elements into a StringBuilder.
-                StringBuilder builder = new StringBuilder();
-                foreach (string value in splitProText)
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (string value in splitProcessedText)
                 {
-                    builder.Append(value);
-                    builder.Append(' ');
+                    stringBuilder.Append(value);
+                    stringBuilder.Append(' ');
                 }
 
-                text = builder.ToString().Trim();
+                text = stringBuilder.ToString().Trim();
 
-
+                // Checks that the tweet text length is less than 140 characters
                 if (text.Length > 140)
                 {
                     MessageBox.Show("The tweet text is more than 140 characters in length.");
                     return false;
                 }
 
-                SetPublicVariable();
-                MessageBox.Show("Tweet Converted");
+                SetGlobalVariable();
                 return true;
-
             }
 
             return false;
-
         }
 
-
-        private void SetPublicVariable()
-        {
-            Header = header;
-            Sender = sender;
-            Subject = subject;
-            Text = text;
-        }
-
-        public void EndOfCycle()
+        
+        public void ResetStringValues()
         {
             header = string.Empty;
             sender = string.Empty;
             text = string.Empty;
             subject = string.Empty;
-            name = string.Empty;
+          
 
             Header = string.Empty;
             Sender = string.Empty;
@@ -316,11 +292,7 @@ namespace MessageBank
             Text = string.Empty;
         }
 
-
-
-
-
-        // Adds message to the list
+     
         public void AddMessageToList(string inputText)
         {
             Messages message = new Messages()
@@ -331,30 +303,11 @@ namespace MessageBank
                 Text = inputText
             };
 
-
-            listOfMessages.Add(message);
-            messageToReturn = message;
-
-            if (header[0].ToString().Equals("T"))
-            {
-                MessageBox.Show("Tweet Saved.");
-            }
-            if (header[0].ToString().Equals("S"))
-            {
-                MessageBox.Show("SMS Saved.");
-            }
-            if (header[0].ToString().Equals("E"))
-            {
-                MessageBox.Show("Email Saved.");
-            }
-
-
+            messagesList.Add(message);
             header = sender = subject = text = string.Empty;
         }
 
-
-
-
+     
         public void RetrieveStoredList()
         {
             int counter = 0;
@@ -362,7 +315,7 @@ namespace MessageBank
             try
             {
                 // Returns the list that is stored as JSON             
-                listOfMessages = jsonClass.Deserialize();
+                messagesList = json.Deserialize();
 
                 counter = counter + 1;
             }
@@ -373,14 +326,25 @@ namespace MessageBank
                     MessageBox.Show(ex.ToString());
                 }
             }
-
         }
 
+        #endregion
 
-        #region User's Choice Validation Methods
+        #region Private Method
 
-        // Method which displays a messagebox asking the user if they are sure they want to exit the application
-        // And gives them the option of answering 'yes' or 'no'
+        
+        private void SetGlobalVariable()
+        {
+            Header = header;
+            Sender = sender;
+            Subject = subject;
+            Text = text;
+        }
+
+        #endregion
+
+        #region User's Choice Validation Methods      
+
         public void ExitApplicationValidation()
         {
             MessageBoxResult yesOrNo = MessageBox.Show("Are you sure you want to exit the application?", "Exit Application", MessageBoxButton.YesNo);
@@ -393,7 +357,6 @@ namespace MessageBank
 
                 Application.Current.Shutdown();
             }
-
             else
             {
                 return;

@@ -7,43 +7,17 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="MainMenu">
-    <Grid >
 
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black" Offset="0"/>
-                <GradientStop Color="#FF34DCE4" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-            
-            <!--Navigation - button (Setup - Arial Font, Size 12, Cannot be tab selected)-->
-            <Button x:Name="exitButton" Content="Exit Application" HorizontalAlignment="Left" Margin="1045,730,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="ExitButton_Click" IsTabStop="False" BorderBrush="#3498db" BorderThickness="3"/>
-
-            <!-- Menu Label-->
-            <Label Content="Menu" HorizontalAlignment="Left" Margin="151,160,0,0" VerticalAlignment="Top" Width="180" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
-
-            <!-- Underline for Menu Label -->
-            <Separator HorizontalAlignment="Left" Height="30" Margin="151,174,0,0" VerticalAlignment="Top" Width="65"/>
-
-            <!-- Menu Buttons-->
-            <Button x:Name="inputButton" Content="Input Messages" HorizontalAlignment="Left" Margin="151,202,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12" Click="InputButton_Click" HorizontalContentAlignment="Left" BorderBrush="#3498db" BorderThickness="3"/>
-            <Button x:Name="viewMessagesButton" Content="View Stored Messages" HorizontalAlignment="Left" Margin="151,252,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="ViewMessagesButton_Click" BorderBrush="#3498db" BorderThickness="3"/>
-            <Button x:Name="exportJsonButton" Content="Export JSON file" HorizontalAlignment="Left" Margin="151,302,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Arial" FontSize="12"  HorizontalContentAlignment="Left" Click="ExportJsonButton_Click" BorderBrush="#3498db" BorderThickness="3" ToolTip="The file saves to your desktop."/>
+    <Grid>
+    
+        <Button x:Name="btn_Exit" Content="Exit Application" HorizontalAlignment="Left" Margin="981,651,0,0" VerticalAlignment="Top" Width="120"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" Click="btn_Exit_Click" BorderBrush="Black"  BorderThickness="10"/>
+        <Button x:Name="btn_Input" Content="Input Messages" HorizontalAlignment="Left" Margin="43,651,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12" Click="btn_Input_Click" HorizontalContentAlignment="Left" BorderBrush="Black" BorderThickness="10"/>
+        <Button x:Name="btn_ViewMessages" Content="View Messages" HorizontalAlignment="Left" Margin="266,651,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12"  HorizontalContentAlignment="Left" Click="btn_ViewMessages_Click" BorderBrush="Black" BorderThickness="10"/>
+        <Button x:Name="btn_ExportJson" Content="Export JSON to  Dekstop" HorizontalAlignment="Left" Margin="502,651,0,0" VerticalAlignment="Top" Width="146"  Height="30" Foreground="Black" FontFamily="Courier" FontSize="12"  HorizontalContentAlignment="Left" Click="btn_ExportJson_Click" BorderBrush="Black" BorderThickness="10"/>
+        <Button x:Name="btn_accessLists" Content="Access Lists" HorizontalAlignment="Left" Margin="749,651,0,0" VerticalAlignment="Top" Width="146" Height="30" Foreground="Black" FontFamily="Courier" FontSize="12"  HorizontalContentAlignment="Left" Click="btn_accessLists_Click" BorderBrush="Black" BorderThickness="10"/>
+        <Image Source="Logo1.png" Margin="200,0,0,154" HorizontalAlignment="Left" Width="800"/>
+        <Label x:Name="lbl_Name" Content="By Nick Taylor" HorizontalAlignment="Left" Height="40" Margin="502,383,0,0" VerticalAlignment="Top" Width="146" Foreground="Black" FontFamily="Courier" FontSize="20" FontWeight="ExtraBlack"  HorizontalContentAlignment="Left"/>
 
 
-            <!-- Trending List-->
-        <Label Content="Trending" HorizontalAlignment="Left" Margin="452,160,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
-        <Separator HorizontalAlignment="Left" Height="30" Margin="452,174,0,0" VerticalAlignment="Top" Width="100"/>
-        <ListBox x:Name="trendingListBox" HorizontalAlignment="Left" Height="186" Margin="452,202,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#3498db" BorderThickness="3"/>
-
-        <!-- Mentions List-->
-        <Label Content="Mentions" HorizontalAlignment="Left" Margin="452,422,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
-        <Separator HorizontalAlignment="Left" Height="30" Margin="452,436,0,0" VerticalAlignment="Top" Width="100"/>
-        <ListBox x:Name="mentionsListBox" HorizontalAlignment="Left" Height="186" Margin="452,466,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#3498db" BorderThickness="3"/>
-
-        <!-- SIR List-->
-        <Label Content="SIR" HorizontalAlignment="Left" Margin="769,160,0,0" VerticalAlignment="Top" Width="100" Height="30" Foreground="Black" FontFamily="Arial" FontSize="16" VerticalContentAlignment="Center" FontWeight="ExtraBold" IsTabStop="False"/>
-        <Separator HorizontalAlignment="Left" Height="30" Margin="769,174,0,0" VerticalAlignment="Top" Width="53"/>
-        <ListBox x:Name="sirListBox" HorizontalAlignment="Left" Height="450" Margin="769,202,0,0" VerticalAlignment="Top" Width="269" BorderBrush="#3498db" BorderThickness="3"/>
     </Grid>
 </Page>

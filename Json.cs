@@ -13,12 +13,12 @@ namespace MessageBank
 
     {
 
-        public void Serialize(List<Messages> list, string path)
+        public void Serialize(List<Messages> messageList, string path)
         {
             try
             {
                 // serialize JSON to a string and then write string to a file
-                File.WriteAllText(path, JsonConvert.SerializeObject(list, Formatting.Indented));
+                File.WriteAllText(path, JsonConvert.SerializeObject(messageList, Formatting.Indented));
 
                 // Message informing the user that the file has been saved successfully
                 MessageBox.Show("JSON File saved.");
