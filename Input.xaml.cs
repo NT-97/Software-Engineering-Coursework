@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 namespace MessageBank
 {
   
-    public partial class Input : Page
+    public partial class Input
     {
         #region Objects / Data Structure / Variables
 

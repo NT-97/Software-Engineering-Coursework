@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 namespace MessageBank
 {
 
-    public partial class MainMenu : Page
+    public  partial class MainMenu
     {
         
         Validations mainmenuValidation = new Validations();
@@ -78,11 +78,11 @@ namespace MessageBank
             {
                 mainmenuValidation.RetrieveStoredList();
 
-                string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/MessageBank.json";
+                string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/MessageBank.json";
 
                 json.Serialize(mainmenuValidation.messagesList, folderPath);
 
-                MessageBox.Show("JSON file has been exported to the desktop");
+                MessageBox.Show("JSON file has been exported to the your documents folder");
             }
             catch (Exception exception)
             {

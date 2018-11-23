@@ -123,11 +123,7 @@ namespace MessageBank
                 }
             }
         }
-
-        /// <summary>
-        /// This method retrieves sir values stored in sir.csv file as a string per line
-        /// Checks that the sir code is formatted correctly then stores the string in a List
-        /// </summary>
+        
         public void RetrieveSIRFromCSV()
         {
             using (var sirCSVReader = new StreamReader(@".\sir.csv"))
@@ -146,7 +142,7 @@ namespace MessageBank
         
         public void FindSIR(string processedText)
         {
-            GetSortCodeAndIncident(processedText);
+            RetrieveSortCodeAndIncident(processedText);
             AddSIRListToCSV();
         }
 
@@ -251,7 +247,7 @@ namespace MessageBank
         }
 
      
-        private void GetSortCodeAndIncident(string processedText)
+        private void RetrieveSortCodeAndIncident(string processedText)
         {
             string[] splitProcessedText = processedText.Trim().Split(' ');
             string[] natureOfIncident = {"Staff Attack",  "Raid","Theft" , "Customer Attack", "Staff Abuse", "Bomb Threat", "Terrorism", "Suspicious Incident", "Cash Loss", "Intelligence", "ATM Theft" };

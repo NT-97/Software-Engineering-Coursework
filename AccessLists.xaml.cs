@@ -9,7 +9,7 @@ using System.Windows.Navigation;
 namespace MessageBank
 {
     
-    public partial class AccessLists : Page
+    public partial class AccessLists
     {
         #region Objects / Data Structures
 
