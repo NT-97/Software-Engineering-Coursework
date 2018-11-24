@@ -209,6 +209,15 @@ namespace MessageBank
                     subjectAndTextBuilder.Append(' ');
                 }
 
+
+
+
+
+
+
+
+
+
                 SubjectAndText = subjectAndTextBuilder.ToString().Trim();
 
                 if (SubjectAndText.ToUpper().StartsWith("SIR"))
